@@ -9,6 +9,8 @@ float minRadius = 20.0;
 float coeff = 0.05;
 float angle = 2;
 float angleCoeff = 5;
+boolean isRecording = false;
+
 VideoExport videoExport;
 
 void setup() {
@@ -28,7 +30,6 @@ void setup() {
   // Some settings
   videoExport = new VideoExport(this, "myVideo.mp4");
   videoExport.setFrameRate(10);  
-  videoExport.startMovie();
 }
 
 void draw() {
@@ -63,7 +64,23 @@ void draw() {
   triangle(radius*cos(radians(angle))     + width/2.0, radius*sin(radians(angle))     + height / 2.0,
            radius*cos(radians(angle+120)) + width/2.0, radius*sin(radians(angle+120)) + height / 2.0,
            radius*cos(radians(angle-120)) + width/2.0, radius*sin(radians(angle-120)) + height / 2.0); 
-
+  
   // Save a frame!
-  videoExport.saveFrame();
+  if (isRecording) {
+    videoExport.saveFrame();
+  }
+}
+
+void keyReleased() {
+  if (key=='r') {
+    if (isRecording) {
+      println("Stop recording");
+      videoExport.endMovie();
+      isRecording = false;
+    } else {
+      println("Start recording");
+      videoExport.startMovie();
+      isRecording = true;
+    }
+  }
 }

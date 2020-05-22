@@ -3,6 +3,8 @@ import com.hamoid.*;
 float[] radiusList;
 int nbRadius = 10;
 float coeff = 10;
+boolean isRecording = false;
+
 VideoExport videoExport;
 
 void initializeRadius() {
@@ -24,7 +26,6 @@ void setup () {
   // Some settings
   videoExport = new VideoExport(this, "myVideo.mp4");
   videoExport.setFrameRate(10);  
-  videoExport.startMovie();
 }
 
 void draw() {
@@ -50,11 +51,28 @@ void draw() {
   radiusList[nbRadius-1] = 10;
   radiusList[0] = width/2;
   radiusList = reverse(sort(radiusList));
+  
   // Save a frame!
-  videoExport.saveFrame();
+  if (isRecording) {
+    videoExport.saveFrame();
+  }
 }
 
 void mouseClicked() {
   initializeRadius();
   print("Reinitializing radius\n");
+}
+
+void keyReleased() {
+  if (key=='r') {
+    if (isRecording) {
+      println("Stop recording");
+      videoExport.endMovie();
+      isRecording = false;
+    } else {
+      println("Start recording");
+      videoExport.startMovie();
+      isRecording = true;
+    }
+  }
 }

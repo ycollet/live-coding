@@ -8,6 +8,8 @@ float y_pos = 100;
 float delta_x = getRand();
 float delta_y = getRand();
 float diam_pos = 100;
+boolean isRecording = false;
+
 VideoExport videoExport;
 
 void setup() {
@@ -19,7 +21,6 @@ void setup() {
   // Some settings
   videoExport = new VideoExport(this, "myVideo.mp4");
   videoExport.setFrameRate(10);  
-  videoExport.startMovie();
 }
 
 void draw() {
@@ -37,7 +38,9 @@ void draw() {
   }
   
   // Save a frame!
-  videoExport.saveFrame();
+  if (isRecording) {
+    videoExport.saveFrame();
+  }
 }
 
 float circle_distance(float x, float y) {
@@ -83,5 +86,19 @@ void move_circle() {
   if (y_pos > height - bound) {
     y_pos = height - bound;
     delta_y = - sign(delta_y)*getRand();
+  }
+}
+
+void keyReleased() {
+  if (key=='r') {
+    if (isRecording) {
+      println("Stop recording");
+      videoExport.endMovie();
+      isRecording = false;
+    } else {
+      println("Start recording");
+      videoExport.startMovie();
+      isRecording = true;
+    }
   }
 }

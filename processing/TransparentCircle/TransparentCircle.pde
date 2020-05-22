@@ -1,3 +1,5 @@
+import com.hamoid.*;
+
 import oscP5.*;
 import netP5.*;
 
@@ -6,12 +8,19 @@ NetAddress myRemoteLocation;
 int index = 0;
 float radius = 100;
 int transp = 0;
+boolean isRecording = false;
+
+VideoExport videoExport;
 
 void setup() {
   size(400,400);
   frameRate(10);
   oscP5 = new OscP5(this,8060);
   myRemoteLocation = new NetAddress("127.0.0.1",8060);
+  
+  // Some settings
+  videoExport = new VideoExport(this, "myVideo.mp4");
+  videoExport.setFrameRate(10);  
 }
 
 void draw() {
@@ -30,6 +39,11 @@ void draw() {
   // // et on ajoute la valeur de la poisition X et position Y du curseur de la souris sur la scene du sketch au message
   // myMessage.add(transp); 
   // myMessage.add(transp2);
+  
+  // Save a frame!
+  if (isRecording) {
+    videoExport.saveFrame();
+  }
 }
 
 void oscEvent(OscMessage theOscMessage) {
@@ -46,5 +60,19 @@ void oscEvent(OscMessage theOscMessage) {
     ////on assigne les valeurs de l'index 1, de type integer (.intValue)  du message OSC 
     ////à la variable positionY que l'on assignera à la coordonnée y de notre cercle
     //transp2 = theOscMessage.get(1).intValue();
+  }
+}
+
+void keyReleased() {
+  if (key=='r') {
+    if (isRecording) {
+      println("Stop recording");
+      videoExport.endMovie();
+      isRecording = false;
+    } else {
+      println("Start recording");
+      videoExport.startMovie();
+      isRecording = true;
+    }
   }
 }
