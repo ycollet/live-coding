@@ -20,7 +20,7 @@ void draw () {
     for(int y=0; y<height; y++) {
       float value = sin(TWO_PI * 0.025 * shift);
       float a_coeff = map(value, -1.0, 1.0, 0.5, 1.0);
-      float a_color = map(noise(x*0.02*a_coeff+shift, y*0.02*a_coeff+shift), 0.0, 1.0, 0, 255);
+      float a_color = map(ridgenoise(x*0.02*a_coeff+shift, y*0.02*a_coeff+shift), 0.0, 1.0, 0, 255);
       float a_color_2 = map(value, -1.0, 1.0, 0, 155);
       set(x, y, color(a_color, 0, a_color_2));
     }
@@ -32,6 +32,11 @@ void draw () {
   if (isRecording) {
     videoExport.saveFrame();
   }
+}
+
+float ridgenoise(float nx, float ny) {
+  //return noise(nx, ny);
+  return map(mouseX, 0, 400, 1, 4) * (0.5 - abs(0.5 - noise(nx, ny)));
 }
 
 void keyReleased() {
