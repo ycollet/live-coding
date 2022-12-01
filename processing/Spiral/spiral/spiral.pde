@@ -5,6 +5,7 @@ ArrayList<Float> listTheta = new ArrayList();
 
 float angleForRotation;
 boolean isRecording = false;
+PImage img;
 
 VideoExport videoExport;
 
@@ -25,12 +26,12 @@ void setup() {
   float r = 88; 
   float rdec = 0.995;
   float arcLength = 0.0;
-  
-  fill(0, 0, 0);
-   
+     
   for (int i=0; i<words.length(); i++) {
-    float w = textWidth(words.charAt(i));
-    arcLength += 3*w/2;
+    
+    //float w = textWidth(words.charAt(i));
+    float w = textWidth("A");
+    arcLength += w;
     float theta = PI + arcLength / r;    
 
     // x and z are the circle part
@@ -42,18 +43,25 @@ void setup() {
     r = r * rdec;
   }
   background(0); 
-
+  img = loadImage("img/tower1.jpeg");
+  
   // Some settings
   videoExport = new VideoExport(this, "myVideo.mp4");
   videoExport.setFrameRate(20);
   
-  textFont(createFont("Vera Sans Bitstream", 16, true));
-  //print(PFont.list());
+  textFont(createFont("Liberation Serif", 20, true));
+  
+  //String[] fontList = PFont.list();
+  //printArray(fontList);
 }
 
 void draw() {
-  background(255); 
+  background(0); 
   lights(); 
+
+  translate(0, 0, -height/2); 
+  image(img, (width - img.width/2)/2, 0, img.width/2, img.height/2);
+  translate(0, 0, height/2); 
 
   translate(width/2, height/2); 
   rotateY(angleForRotation);
@@ -65,11 +73,13 @@ void draw() {
     translate (pv.x, pv.y, pv.z); 
     //sphere(4);
     rotateY(theta + PI/4.0);
+    fill(255, 255, 0);
     text(words.charAt(indexChar),0,0);
+    fill(0, 0, 0);
     popMatrix();
     indexChar++;
   }
-
+  
   angleForRotation+=.007; 
   
   // Save a frame!
